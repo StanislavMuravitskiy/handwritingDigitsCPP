@@ -146,7 +146,7 @@ int main() {
 			}
 		}
 
-		// Начинаем обучение с 5 эпохами
+		// Начинаем обучение с 1 эпохой
 		for (int epochs = 0; epochs < 1; epochs++) {
 			for (int i = 0; i < 60000; i++) {
 				cout << "Num: " << i << endl;
