@@ -150,9 +150,12 @@ int main() {
 
 		// Начинаем обучение с 1 эпохой
 		for (int epochs = 0; epochs < 1; epochs++) {
+		    cout << endl;
 			for (int i = 0; i < 60000; i++) {
-				cout << "Num: " << i << endl;
-
+				if(i%100==0){
+				    cout << "\x1b[1A" << "\x1b[2K"; // Delete the entire line
+				    cout << "Num: " << i << endl;
+				}
 				// Приводим входные значения от 0.1 до 1
 				for (int j = 1; j < 785; j++) {
 					training_data_vector[i][j] = training_data_vector[i][j] / 255.0 * 0.99 + 0.1;
@@ -201,7 +204,7 @@ int main() {
 				// Находим ошибки выходного слоя
 				vector<vector<double>> output_errors = matrixSubstration(new_results, final_outputs_value);
 
-				cout << "hello";
+				// cout << "hello";
 				// Находим ошибки скрытого слоя
 				vector<vector<double>> hidden_errors = matrixMultiplication(matrixTransposition(hidden_to_output_weights), output_errors);
 
