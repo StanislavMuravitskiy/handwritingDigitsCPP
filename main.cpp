@@ -52,7 +52,7 @@ class Matrix{
                 Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
                 for (int i = 0; i < matrix.size(); i++) {
                     for (int j = 0; j < matrix[0].size(); j++) {
-                        result.matrix[i][j] += b.matrix[i][j];
+                        result.matrix[i][j] = matrix[i][j]+b.matrix[i][j];
                     }
                 }
                 return result;
@@ -62,7 +62,7 @@ class Matrix{
                 Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
                 for (int i = 0; i < matrix.size(); i++) {
                     for (int j = 0; j < matrix[0].size(); j++) {
-                        result.matrix[i][j] -= b.matrix[i][j];
+                        result.matrix[i][j] = matrix[i][j]-b.matrix[i][j];
                     }
                 }
                 return result;
