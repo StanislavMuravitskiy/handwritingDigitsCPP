@@ -113,6 +113,25 @@ class Matrix{
             }
 };
 
+double accuracy_score(Matrix y_true, Matrix y_test){
+		int tp = 0; // True positive
+		int fp = 0; // False positive
+		int tn = 0; // True negative
+		int fn = 0; // False negative
+		for(int i = 0; i < y_true.matrix.size(); i++)
+		    for(int j = 0; j < y_true.matrix[0].size(); j++){
+				if(y_test.matrix[i][j]>=0.5 && y_true.matrix[i][j]>=0.5)
+				    tp++;
+				else if(y_test.matrix[i][j]>=0.5 && y_true.matrix[i][j]<0.5)
+				    fp++;
+				else if(y_test.matrix[i][j]<0.5 && y_true.matrix[i][j]<0.5)
+					tn++;
+		        else if(y_test.matrix[i][j]<0.5 && y_true.matrix[i][j]>=0.5)
+					fn++;
+				}
+		return (tp+tn)/(tp+tn+fp+fn);
+}
+
 int main() {
 
     srand(time(0));
@@ -268,6 +287,7 @@ int main() {
 
         // Будем считать правильные ответы
         double right_answers = 0;
+		double accuracy = 0;
 
         for (int i = 0; i < 10000; i++) {
             // Снова преобразуем числа
@@ -287,27 +307,17 @@ int main() {
             Matrix final_inputs_value = hidden_to_output_weights.dot(hidden_outputs_value);
             Matrix final_outputs_value = final_inputs_value.sigmoid();
 
-
-            // Находим цифру с наибольшей вероятностью
-            double max_value = 0;
-            int best_result_number = 0;
-            for (int j = 0; j < 10; j++) {
-                if (final_outputs_value.matrix[j][0] > max_value) {
-                    max_value = final_outputs_value.matrix[j][0];
-                    best_result_number = j;
-
-                }
-            }
-
-            // Если она правильная увеличиваем счетчик
-            if (best_result_number == test_data_vector.matrix[i][0]) {
-                right_answers++;
-            }
+            // Создаем вектор результатов с ожидаемым значением
+            Matrix true_results(1, vector<double>(output_nodes, 0));
+            int help = test_data_vector.matrix[i][0];
+            true_results.matrix[0][help] = 0.99;
+            
+		    accuracy+=accuracy_score(true_results, final_outputs_value.transpose());
         }
 
         // Выводим точность нейросети на тестовой выборке
         cout << "Training and tests completed" << endl;
-        cout << "Accuracy: " << right_answers / 100 << endl;
+		cout << "Accuracy: " << accuracy /100 << " %" << endl;
 
         break;
     }
