@@ -3,9 +3,9 @@
 #include <vector>
 #include <ctime>
 #include <cmath>
+#include "matrix.h"
 
 using namespace std;
-
 
 // Задаем количество узлов в 3 слоях нейросети
 const int input_nodes = 784;
@@ -14,104 +14,6 @@ const int output_nodes = 10;
 
 //Коэффициент обучения нейросети
 const double learning_rate = 0.3;
-
-
-const double e = 2.71828;
-
-// Активационная функция - сигмоида
-
-class Matrix{
-		public:
-            vector<vector<double>> matrix;
-            Matrix(int num, vector<double> line){
-                vector<vector<double>> buf(num, line);
-				matrix = buf;
-            }
-            //Умножение матрицы на число
-            Matrix matrixAndNumber(double num) {
-                Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < matrix[0].size(); j++) {
-                        result.matrix[i][j] = matrix[i][j] * num;
-                    }
-                }
-                return result;
-            }
-        //Вычитание из единичной матрицы
-            Matrix negative(){
-                Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < matrix[0].size(); j++)
-                        result.matrix[i][j] = 1.0 - matrix[i][j];
-                }
-                return result;
-            }
-            
-            //Сложение матриц
-            Matrix addition(Matrix b) {
-                Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < matrix[0].size(); j++) {
-                        result.matrix[i][j] = matrix[i][j]+b.matrix[i][j];
-                    }
-                }
-                return result;
-            }
-            //Вычитание матриц
-            Matrix substration(Matrix b) {
-                Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < matrix[0].size(); j++) {
-                        result.matrix[i][j] = matrix[i][j]-b.matrix[i][j];
-                    }
-                }
-                return result;
-            }
-        
-            //Умножение матриц
-            Matrix dot(Matrix b) {
-                Matrix c(matrix.size(), vector<double>(b.matrix[0].size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < b.matrix[0].size(); j++) {
-                        for (int k = 0; k < matrix[0].size(); k++) {
-                            c.matrix[i][j] += matrix[i][k] * b.matrix[k][j];                
-                        }
-                    }
-                }
-                return c;
-            }
-            //Транспонирование матрицы
-            Matrix transpose() {
-                Matrix b(matrix[0].size(), vector<double>(matrix.size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < matrix[0].size(); j++) {
-                        b.matrix[j][i] = matrix[i][j];
-                    }
-                }
-                return b;
-            }
-            //Поэлементное умножение матриц
-            Matrix multiply(Matrix b) {
-                Matrix result(matrix.size(), vector<double>(b.matrix[0].size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < b.matrix[0].size(); j++) {
-                        result.matrix[i][j] = matrix[i][j] * b.matrix[i][j];
-                    }
-                }
-                return result;
-        
-            }
-        
-            Matrix sigmoid() {
-                Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
-                for (int i = 0; i < matrix.size(); i++) {
-                    for (int j = 0; j < matrix[0].size(); j++) {
-                        result.matrix[i][j] = 1.0 / (1.0 + pow(e, -1 * matrix[i][j]));
-                    }
-                }
-                return result;
-            }
-};
 
 double accuracy_score(Matrix y_true, Matrix y_test){
 		int tp = 0; // True positive
