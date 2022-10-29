@@ -90,6 +90,17 @@ class Matrix{
             return result;
         }
         
+		//Возведение матрицы в квадрат
+        Matrix sqr() {
+            Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
+            for (int i = 0; i < matrix.size(); i++) {
+                for (int j = 0; j < matrix[0].size(); j++) {
+                    result.matrix[i][j] = pow(matrix[i][j],2);
+                }
+            }
+            return result;
+        }
+
 		// Активационная функция - сигмоида
         Matrix sigmoid() {
             Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
@@ -100,4 +111,13 @@ class Matrix{
             }
             return result;
         }
+		
+		// Размер матрицы
+		int* shape() {
+		    int sizeArray[2];
+			sizeArray[0] = matrix.size();
+			sizeArray[1] = matrix[0].size();
+			return sizeArray;
+		}
+
 };
