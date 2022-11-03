@@ -22,13 +22,13 @@ double accuracy_score(Matrix y_true, Matrix y_test){
 		int fn = 0; // False negative
 		for(int i = 0; i < y_true.matrix.size(); i++)
 		    for(int j = 0; j < y_true.matrix[0].size(); j++){
-				if(y_test.matrix[i][j]>=0.5 && y_true.matrix[i][j]>=0.5)
+				if(y_test.getItem(i,j)>=0.5 && y_true.getItem(i,j)>=0.5)
 				    tp++;
-				else if(y_test.matrix[i][j]>=0.5 && y_true.matrix[i][j]<0.5)
+				else if(y_test.getItem(i,j)>=0.5 && y_true.getItem(i,j)<0.5)
 				    fp++;
-				else if(y_test.matrix[i][j]<0.5 && y_true.matrix[i][j]<0.5)
+				else if(y_test.getItem(i,j)<0.5 && y_true.getItem(i,j)<0.5)
 					tn++;
-		        else if(y_test.matrix[i][j]<0.5 && y_true.matrix[i][j]>=0.5)
+		        else if(y_test.getItem(i,j)<0.5 && y_true.getItem(i,j)>=0.5)
 					fn++;
 				}
 		return (tp+tn)/(tp+tn+fp+fn);
@@ -55,14 +55,14 @@ int main() {
         for (int i = 0; i < hidden_nodes; i++) {
             for (int j = 0; j < input_nodes; j++) {
 				double val = double(rand() % 1000) / 10000.0;
-                input_to_hidden_weights.matrix[i][j] = val;
+                input_to_hidden_weights.setItem(val, i, j);
             }
         }
 
         //Аналогично
         for (int i = 0; i < output_nodes; i++) {
             for (int j = 0; j < hidden_nodes; j++) {
-                hidden_to_output_weights.matrix[i][j] = double(rand() % 316) / 1000.0;
+                hidden_to_output_weights.setItem(double(rand() % 316) / 1000.0, i, j);
             }
         }
 
@@ -71,7 +71,9 @@ int main() {
         Matrix training_data_vector(60000, vector<double>(785, 0));
         for (int i = 0; i < 60000; i++) {
             for (int j = 0; j < 785; j++) {
-                training_data_input >> training_data_vector.matrix[i][j];
+				double buf;
+                training_data_input >> buf;
+				training_data_vector.setItem(buf, i, j);
             }
         }
 
@@ -85,27 +87,25 @@ int main() {
                 }
                 // Приводим входные значения от 0.1 до 1
                 for (int j = 1; j < 785; j++) {
-                    training_data_vector.matrix[i][j] = training_data_vector.matrix[i][j] / 255.0 * 0.99 + 0.1;
+                    training_data_vector.setItem(training_data_vector.getItem(i, j) / 255.0 * 0.99 + 0.1, i, j);
                 }
 
                 // Создаем вектор результатов с ожидаемым значением
                 vector<double> results(output_nodes, 0.01);
-                int help = training_data_vector.matrix[i][0];
+                int help = training_data_vector.getItem(i, 0);
                 results[help] = 0.99;
 
 
                 // Приводим вектор входных  значений к матричному виду
                 Matrix new_inputs(1, vector<double>(784, 0));
-                int k = 0;
                 for (int j = 1; j < 785; j++) {
-                    new_inputs.matrix[0][k] = training_data_vector.matrix[i][j];
-                    k++;
+                    new_inputs.setItem(training_data_vector.getItem(i,j), 0, j-1); 
                 }
 
                 // Приводим вектор выходных результатов к матричному виду
                 Matrix new_results(1, vector<double>(results.size(), 0));
                 for (int j = 0; j < results.size(); j++) {
-                    new_results.matrix[0][j] = results[j];
+                    new_results.setItem(results[j], 0, j); 
                 }
 
 
@@ -163,7 +163,7 @@ int main() {
         ofstream output("input_to_hidden_weights.txt");
         for (int i = 0; i < hidden_nodes; i++) {
             for (int j = 0; j < input_nodes; j++) {
-                output << input_to_hidden_weights.matrix[i][j] << " ";
+                output << input_to_hidden_weights.getItem(i,j) << " ";
             }
         }
         output.close();
@@ -171,10 +171,9 @@ int main() {
         ofstream output1("hidden_to_output_weights.txt");
         for (int i = 0; i < output_nodes; i++) {
             for (int j = 0; j < hidden_nodes; j++) {
-                output1 << hidden_to_output_weights.matrix[i][j] << " ";
+                output1 << hidden_to_output_weights.getItem(i,j) << " ";
             }
         }
-
         output1.close();
 
         // Считываем тестовую выборку
@@ -182,7 +181,9 @@ int main() {
         Matrix test_data_vector(10000, vector<double>(785, 0));
         for (int i = 0; i < 10000; i++) {
             for (int j = 0; j < 785; j++) {
-                test_data_input >> test_data_vector.matrix[i][j];
+				double buf;
+                test_data_input >> buf; 
+				test_data_vector.setItem(buf, i, j);
             }
         }
 
@@ -194,12 +195,12 @@ int main() {
         for (int i = 0; i < 10000; i++) {
             // Снова преобразуем числа
             for (int j = 1; j < 785; j++) {
-                test_data_vector.matrix[i][j] = test_data_vector.matrix[i][j] / 255.0 * 0.99 + 0.1;
+                test_data_vector.setItem(test_data_vector.getItem(i, j) / 255.0 * 0.99 + 0.1, i, j);
             }
             // Переводим входные данные в матричный вид
             Matrix new_inputs(1, vector<double>(784, 0));
             for (int j = 1; j < 785; j++) {
-                new_inputs.matrix[0][j - 1] = test_data_vector.matrix[i][j];
+                new_inputs.setItem(test_data_vector.getItem(i,j), 0, j-1); 
             }
 
             //Поэтапно считаем все входные значения
@@ -211,8 +212,8 @@ int main() {
 
             // Создаем вектор результатов с ожидаемым значением
             Matrix true_results(1, vector<double>(output_nodes, 0));
-            int help = test_data_vector.matrix[i][0];
-            true_results.matrix[0][help] = 0.99;
+            int help = test_data_vector.getItem(i, 0);
+            true_results.setItem(0.99, 0, help);
             
 		    accuracy+=accuracy_score(true_results, final_outputs_value.transpose());
         }
@@ -239,7 +240,9 @@ int main() {
         ifstream input("input_to_hidden_weights.txt");
         for (int i = 0; i < hidden_nodes; i++) {
             for (int j = 0; j < input_nodes; j++) {
-                input >> new_input_weights.matrix[i][j];
+				double buf = 0.0;
+				input >> buf; 
+				new_input_weights.setItem(buf,i,j);
             }
         }
         input.close();
@@ -247,7 +250,9 @@ int main() {
         ifstream input1("hidden_to_output_weights.txt");
         for (int i = 0; i < output_nodes; i++) {
             for (int j = 0; j < hidden_nodes; j++) {
-                input1 >> new_output_weights.matrix[i][j];
+				double buf;
+				input1 >> buf; 
+				new_output_weights.setItem(buf,i,j);
             }
         }
         input1.close();
@@ -268,7 +273,7 @@ int main() {
         Matrix new_inputs(1, vector<double>(784, 0));
 
         for (int j = 0; j < 784; j++) {
-            new_inputs.matrix[0][j] = img_vector[j];
+            new_inputs.setItem(img_vector[j],0,j); 
         }
 
         // Снова транспонируем
@@ -284,7 +289,7 @@ int main() {
 
         //Выводим таблицу вероятностей значений
         for (int i = 0; i < 10; i++) {
-            cout << i << ": " << final_outputs_value.matrix[i][0] << endl;
+            cout << i << ": " << final_outputs_value.getItem(i,0) << endl;
         }
 
 

@@ -120,4 +120,12 @@ class Matrix{
 			return sizeArray;
 		}
 
+		double getItem(int i, int j){
+		    return matrix[i][j];
+		}
+
+		void setItem(double var, int i, int j){
+		    matrix[i][j] = var;
+		}
+
 };
