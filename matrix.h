@@ -113,11 +113,12 @@ class Matrix{
         }
 		
 		// Размер матрицы
-		int* shape() {
-		    int sizeArray[2];
-			sizeArray[0] = matrix.size();
-			sizeArray[1] = matrix[0].size();
-			return sizeArray;
+		int width() {
+			return matrix.size();
+		}
+
+		int height() {
+			return matrix[0].size();
 		}
 
 		double getItem(int i, int j){

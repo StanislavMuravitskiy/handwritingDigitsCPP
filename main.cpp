@@ -20,8 +20,8 @@ double accuracy_score(Matrix y_true, Matrix y_test){
 		int fp = 0; // False positive
 		int tn = 0; // True negative
 		int fn = 0; // False negative
-		for(int i = 0; i < y_true.matrix.size(); i++)
-		    for(int j = 0; j < y_true.matrix[0].size(); j++){
+		for(int i = 0; i < y_true.width(); i++)
+		    for(int j = 0; j < y_true.height(); j++){
 				if(y_test.getItem(i,j)>=0.5 && y_true.getItem(i,j)>=0.5)
 				    tp++;
 				else if(y_test.getItem(i,j)>=0.5 && y_true.getItem(i,j)<0.5)
