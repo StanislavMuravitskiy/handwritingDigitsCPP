@@ -6,7 +6,6 @@ const double e = 2.71828;
 
 class Matrix{
     public:
-        vector<vector<double>> matrix;
         Matrix(int num, vector<double> line){
             vector<vector<double>> buf(num, line);
 		    matrix = buf;
@@ -128,5 +127,7 @@ class Matrix{
 		void setItem(double var, int i, int j){
 		    matrix[i][j] = var;
 		}
+	private:
+        vector<vector<double>> matrix;
 
 };
