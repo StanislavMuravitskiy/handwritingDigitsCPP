@@ -6,14 +6,15 @@ const double e = 2.71828;
 
 class Matrix{
     public:
-        Matrix(int num, vector<double> line){
-            vector<vector<double>> buf(num, line);
+        Matrix(int width, int height, double var){
+		    vector<double> line(height, var);
+            vector<vector<double>> buf(width, line);
 		    matrix = buf;
         }
 
         //Умножение матрицы на число
         Matrix matrixAndNumber(double num) {
-            Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
+            Matrix result(this->width(), this->height(), 0);
             for (int i = 0; i < matrix.size(); i++) {
                 for (int j = 0; j < matrix[0].size(); j++) {
                     result.matrix[i][j] = matrix[i][j] * num;
@@ -24,7 +25,7 @@ class Matrix{
 
         //Вычитание из единичной матрицы
         Matrix negative(){
-            Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
+            Matrix result(this->width(), this->height(), 0);
             for (int i = 0; i < matrix.size(); i++) {
                 for (int j = 0; j < matrix[0].size(); j++)
                     result.matrix[i][j] = 1.0 - matrix[i][j];
@@ -34,7 +35,7 @@ class Matrix{
             
         //Сложение матриц
         Matrix addition(Matrix b) {
-            Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
+            Matrix result(this->width(), this->height(), 0);
             for (int i = 0; i < matrix.size(); i++) {
                 for (int j = 0; j < matrix[0].size(); j++) {
                     result.matrix[i][j] = matrix[i][j]+b.matrix[i][j];
@@ -45,7 +46,7 @@ class Matrix{
 
         //Вычитание матриц
         Matrix substration(Matrix b) {
-            Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
+            Matrix result(this->width(), this->height(), 0);
             for (int i = 0; i < matrix.size(); i++) {
                 for (int j = 0; j < matrix[0].size(); j++) {
                     result.matrix[i][j] = matrix[i][j]-b.matrix[i][j];
@@ -56,33 +57,33 @@ class Matrix{
         
         //Умножение матриц
         Matrix dot(Matrix b) {
-            Matrix c(matrix.size(), vector<double>(b.matrix[0].size(), 0));
-            for (int i = 0; i < matrix.size(); i++) {
-                for (int j = 0; j < b.matrix[0].size(); j++) {
+            Matrix result(this->width(), b.height(), 0);
+            for (int i = 0; i < this->width(); i++) {
+                for (int j = 0; j < b.height(); j++) {
                     for (int k = 0; k < matrix[0].size(); k++) {
-                        c.matrix[i][j] += matrix[i][k] * b.matrix[k][j];                
+                        result.matrix[i][j] += matrix[i][k] * b.matrix[k][j];                
                     }
                 }
             }
-            return c;
+            return result;
         }
         
 		//Транспонирование матрицы
         Matrix transpose() {
-            Matrix b(matrix[0].size(), vector<double>(matrix.size(), 0));
-            for (int i = 0; i < matrix.size(); i++) {
-                for (int j = 0; j < matrix[0].size(); j++) {
-                    b.matrix[j][i] = matrix[i][j];
+            Matrix result(this->height(), this->width(), 0);
+            for (int i = 0; i < this->width(); i++) {
+                for (int j = 0; j < this->height(); j++) {
+                    result.matrix[j][i] = matrix[i][j];
                 }
             }
-            return b;
+            return result;
         }
         
 		//Поэлементное умножение матриц
         Matrix multiply(Matrix b) {
-            Matrix result(matrix.size(), vector<double>(b.matrix[0].size(), 0));
+            Matrix result(this->width(), this->height(), 0);
             for (int i = 0; i < matrix.size(); i++) {
-                for (int j = 0; j < b.matrix[0].size(); j++) {
+                for (int j = 0; j < b.height(); j++) {
                     result.matrix[i][j] = matrix[i][j] * b.matrix[i][j];
                 }
             }
@@ -91,7 +92,7 @@ class Matrix{
         
 		//Возведение матрицы в квадрат
         Matrix sqr() {
-            Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
+            Matrix result(this->width(), this->height(), 0);
             for (int i = 0; i < matrix.size(); i++) {
                 for (int j = 0; j < matrix[0].size(); j++) {
                     result.matrix[i][j] = pow(matrix[i][j],2);
@@ -102,7 +103,7 @@ class Matrix{
 
 		// Активационная функция - сигмоида
         Matrix sigmoid() {
-            Matrix result(matrix.size(), vector<double>(matrix[0].size(), 0));
+            Matrix result(this->width(), this->height(), 0);
             for (int i = 0; i < matrix.size(); i++) {
                 for (int j = 0; j < matrix[0].size(); j++) {
                     result.matrix[i][j] = 1.0 / (1.0 + pow(e, -1 * matrix[i][j]));

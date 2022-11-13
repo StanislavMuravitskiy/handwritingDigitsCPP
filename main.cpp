@@ -30,8 +30,8 @@ int main() {
     {
 
         //Создаем матрицы весов
-        Matrix input_to_hidden_weights(hidden_nodes, vector<double>(input_nodes, 0));
-        Matrix hidden_to_output_weights(output_nodes, vector<double>(hidden_nodes, 0));
+        Matrix input_to_hidden_weights(hidden_nodes, input_nodes, 0);
+        Matrix hidden_to_output_weights(output_nodes, hidden_nodes, 0);
 
         //Заполняем матрицы весов случайными значениями от 0 до 1 / корень(hidden_nodes)
         for (int i = 0; i < hidden_nodes; i++) {
@@ -50,7 +50,7 @@ int main() {
 
         //Считываем данные обучающей выборки
         ifstream training_data_input("mnist_train.txt");
-        Matrix training_data_vector(60000, vector<double>(785, 0));
+        Matrix training_data_vector(60000, 785, 0);
         for (int i = 0; i < 60000; i++) {
             for (int j = 0; j < 785; j++) {
 				double buf;
@@ -58,7 +58,7 @@ int main() {
 				training_data_vector.setItem(buf, i, j);
             }
         }
-
+		
         //Начинаем обучение с 1 эпохой
         for (int epochs = 0; epochs < 1; epochs++) {
             cout << endl;
@@ -71,7 +71,6 @@ int main() {
                 for (int j = 1; j < 785; j++) {
                     training_data_vector.setItem(training_data_vector.getItem(i, j) / 255.0 * 0.99 + 0.1, i, j);
                 }
-
                 // Создаем вектор результатов с ожидаемым значением
                 vector<double> results(output_nodes, 0.01);
                 int help = training_data_vector.getItem(i, 0);
@@ -79,22 +78,20 @@ int main() {
 
 
                 // Приводим вектор входных  значений к матричному виду
-                Matrix new_inputs(1, vector<double>(784, 0));
+                Matrix new_inputs(1, 784, 0);
                 for (int j = 1; j < 785; j++) {
                     new_inputs.setItem(training_data_vector.getItem(i,j), 0, j-1); 
                 }
 
                 // Приводим вектор выходных результатов к матричному виду
-                Matrix new_results(1, vector<double>(results.size(), 0));
+                Matrix new_results(1, results.size(), 0);
                 for (int j = 0; j < results.size(); j++) {
                     new_results.setItem(results[j], 0, j); 
                 }
 
-
                 // Транспонируем матрицы для дальнейших вычисление
                 new_results = new_results.transpose();
                 new_inputs = new_inputs.transpose();
-
 
 
                 // Находим входные значения скрытого слоя
@@ -160,7 +157,7 @@ int main() {
 
         // Считываем тестовую выборку
         ifstream test_data_input("mnist_test.txt");
-        Matrix test_data_vector(10000, vector<double>(785, 0));
+        Matrix test_data_vector(10000, 785, 0);
         for (int i = 0; i < 10000; i++) {
             for (int j = 0; j < 785; j++) {
 				double buf;
@@ -180,7 +177,7 @@ int main() {
                 test_data_vector.setItem(test_data_vector.getItem(i, j) / 255.0 * 0.99 + 0.1, i, j);
             }
             // Переводим входные данные в матричный вид
-            Matrix new_inputs(1, vector<double>(784, 0));
+            Matrix new_inputs(1, 784, 0);
             for (int j = 1; j < 785; j++) {
                 new_inputs.setItem(test_data_vector.getItem(i,j), 0, j-1); 
             }
@@ -193,7 +190,7 @@ int main() {
             Matrix final_outputs_value = final_inputs_value.sigmoid();
 
             // Создаем вектор результатов с ожидаемым значением
-            Matrix true_results(1, vector<double>(output_nodes, 0));
+            Matrix true_results(1, output_nodes, 0);
             int help = test_data_vector.getItem(i, 0);
             true_results.setItem(0.99, 0, help);
             
@@ -213,8 +210,8 @@ int main() {
         //Используем нейросеть для наших данных
 
         //Создаем матрицы весов
-        Matrix new_input_weights(hidden_nodes, vector<double>(input_nodes, 0));
-        Matrix new_output_weights(output_nodes, vector<double>(hidden_nodes, 0));
+        Matrix new_input_weights(hidden_nodes, input_nodes, 0);
+        Matrix new_output_weights(output_nodes, hidden_nodes, 0);
 
 
 
@@ -252,7 +249,7 @@ int main() {
 
 
         // Приводим к матричному виду
-        Matrix new_inputs(1, vector<double>(784, 0));
+        Matrix new_inputs(1, 784, 0);
 
         for (int j = 0; j < 784; j++) {
             new_inputs.setItem(img_vector[j],0,j); 
